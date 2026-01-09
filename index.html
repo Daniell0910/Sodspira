@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sodspira | Conrad Challenge</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root{
+      --bg:#05060a;
+      --surface:#0e1322;
+      --stroke:rgba(255,255,255,.07);
+      --text:#ffffff;
+      --dim:#a8b1c3;
+      --pink:#ff4fd8;
+      --pink2:#ff2aa7;
+      --cyan:#00f2ff;
+      --radius:18px;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; }
+    body{
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(255,79,216,.10), transparent 55%),
+                  radial-gradient(1000px 700px at 90% 30%, rgba(0,242,255,.08), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      font-family:"Open Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      overflow-x:hidden;
+    }
+
+    h1,h2,h3{ font-family:"Montserrat", system-ui, sans-serif; }
+    a{ color:inherit; text-decoration:none; }
+    .container{ max-width:1200px; margin:0 auto; padding:0 22px; }
+
+    nav{
+      position:fixed; top:0; left:0; width:100%;
+      z-index:1000;
+      background: rgba(5,6,10,.62);
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-wrap{ display:flex; align-items:center; justify-content:space-between; padding:16px 0; }
+    .logo{
+      font-family:"Montserrat", sans-serif;
+      font-weight:800; letter-spacing:2px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .logo-mark{
+      width:34px; height:34px; border-radius:10px;
+      box-shadow: 0 12px 30px rgba(255,79,216,.25);
+      border: 1px solid rgba(255,255,255,.12);
+      display:block;
+      object-fit:contain;
+    }
+    .logo span{ color:var(--pink); }
+
+    .nav-links{ display:flex; gap:22px; list-style:none; align-items:center; }
+    .nav-links a{
+      color: rgba(255,255,255,.85);
+      font-weight:600;
+      font-size:.95rem;
+      padding:10px 10px;
+      border-radius:10px;
+      transition: .2s ease;
+    }
+    .nav-links a:hover{
+      background: rgba(255,255,255,.06);
+      color: var(--pink);
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,79,216,.45);
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(255,79,216,.22), rgba(0,242,255,.10));
+      box-shadow: 0 0 26px rgba(255,79,216,.12);
+      transition:.25s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,79,216,.75);
+      box-shadow: 0 0 40px rgba(255,79,216,.18);
+    }
+
+    .hamburger{ display:none; width:42px; height:42px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      align-items:center; justify-content:center;
+      cursor:pointer;
+    }
+    .hamburger i{ color: rgba(255,255,255,.85); }
+    .mobile-panel{
+      display:none;
+      border-top:1px solid rgba(255,255,255,.06);
+      padding:10px 0 16px;
+    }
+    .mobile-panel a{
+      display:block;
+      padding:12px 10px;
+      border-radius:12px;
+      color: rgba(255,255,255,.9);
+      font-weight:600;
+    }
+    .mobile-panel a:hover{ background: rgba(255,255,255,.06); color: var(--pink); }
+
+    header#hero{
+      min-height:100vh;
+      padding-top:92px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .hero-blob{
+      position:absolute; border-radius:999px;
+      filter: blur(55px);
+      opacity:.9;
+      pointer-events:none;
+      transform: translate3d(var(--px,0), var(--py,0), 0);
+      transition: transform .08s linear;
+    }
+    .blob-a{ width:620px; height:620px; left:-200px; top:-180px;
+      background: radial-gradient(circle, rgba(255,79,216,.26), transparent 60%);
+    }
+    .blob-b{ width:540px; height:540px; right:-170px; bottom:-140px;
+      background: radial-gradient(circle, rgba(0,242,255,.18), transparent 62%);
+    }
+
+    .hero-particles{
+      position:absolute; inset:0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.10) 1px, transparent 2px),
+        radial-gradient(circle at 70% 20%, rgba(255,255,255,.08) 1px, transparent 2px),
+        radial-gradient(circle at 55% 70%, rgba(255,255,255,.06) 1px, transparent 2px),
+        radial-gradient(circle at 35% 85%, rgba(255,255,255,.07) 1px, transparent 2px);
+      background-size: 260px 260px, 320px 320px, 380px 380px, 440px 440px;
+      opacity:.35;
+      pointer-events:none;
+      transform: translate3d(var(--px,0), var(--py,0), 0);
+      transition: transform .08s linear;
+    }
+
+    #cellCanvas{
+      position:absolute;
+      right: 4%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(560px, 72vmin);
+      height: min(560px, 72vmin);
+      z-index: 10;
+      pointer-events:none;
+      filter: drop-shadow(0 30px 70px rgba(255,79,216,.18));
+      opacity: .95;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:20;
+      max-width: 760px;
+      transform-style: preserve-3d;
+      transform: rotateX(calc(var(--tiltY,0) * 1deg)) rotateY(calc(var(--tiltX,0) * 1deg));
+      transition: transform .08s linear;
+    }
+    .pill{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      border-radius:999px;
+      color: var(--dim);
+      font-size:.9rem;
+      backdrop-filter: blur(10px);
+    }
+    .tag-dot{ width:8px; height:8px; border-radius:50%;
+      background: linear-gradient(135deg, var(--pink), var(--cyan));
+      box-shadow: 0 0 18px rgba(255,79,216,.35);
+    }
+    .hero-title{
+      font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+      font-weight: 800;
+      line-height:1.05;
+      margin: 18px 0 14px;
+      background: linear-gradient(135deg, #ffffff 0%, var(--pink) 65%, var(--cyan) 110%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      letter-spacing:-0.02em;
+      text-shadow: 0 0 40px rgba(255,79,216,.08);
+    }
+    .hero-sub{
+      color: var(--dim);
+      font-size: 1.05rem;
+      line-height:1.7;
+      max-width: 640px;
+      margin-bottom: 22px;
+    }
+    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .btn-solid{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,79,216,.55);
+      background: linear-gradient(135deg, rgba(255,79,216,.85), rgba(0,242,255,.35));
+      color: #06060a;
+      font-weight:800;
+      transition:.25s ease;
+      box-shadow: 0 18px 55px rgba(255,79,216,.18);
+    }
+    .btn-solid:hover{ transform: translateY(-1px); box-shadow: 0 22px 70px rgba(255,79,216,.22); }
+
+    .quick-badges{
+      margin-top:18px;
+      display:flex; gap:10px; flex-wrap:wrap;
+      color: rgba(255,255,255,.85);
+      font-size:.92rem;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(10px);
+    }
+    .badge i{ color: var(--pink); }
+
+    section{ padding: 84px 0; }
+    .section-head{ text-align:center; margin-bottom: 34px; }
+    .section-head h2{
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      margin-bottom: 10px;
+      letter-spacing:-0.01em;
+    }
+    .section-head p{ color: var(--dim); max-width: 720px; margin: 0 auto; line-height:1.7; }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      transform: translateY(0);
+      transition: transform .22s ease, border-color .22s ease;
+    }
+    .card:hover{ transform: translateY(-6px); border-color: rgba(255,79,216,.26); }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(450px 220px at 10% 0%, rgba(255,79,216,.22), transparent 50%),
+                  radial-gradient(420px 220px at 90% 0%, rgba(0,242,255,.14), transparent 52%);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .card > *{ position:relative; z-index:1; }
+    .icon{
+      width:44px; height:44px; border-radius:14px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(255,79,216,.12);
+      border: 1px solid rgba(255,79,216,.22);
+      margin-bottom: 14px;
+      box-shadow: 0 0 28px rgba(255,79,216,.08);
+    }
+    .icon i{ color: var(--pink); font-size: 1.2rem; }
+    .card h3{ font-size:1.2rem; margin-bottom: 8px; }
+    .card p{ color: var(--dim); line-height:1.7; font-size:.98rem; }
+
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .stat{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      padding: 26px 22px;
+      text-align:center;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .stat::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 220px at 50% 0%, rgba(255,79,216,.22), transparent 60%);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .stat > *{ position:relative; z-index:1; }
+    .stat-num{
+      font-family:"Montserrat", sans-serif;
+      font-weight:800;
+      font-size: 3.1rem;
+      letter-spacing:-0.02em;
+      background: linear-gradient(135deg, var(--pink), var(--cyan));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      margin-bottom: 6px;
+    }
+    .stat p{ color: var(--dim); line-height:1.6; }
+
+    .proto{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items:center;
+    }
+    .imgph{
+      width:100%;
+      aspect-ratio: 16/10;
+      border-radius: var(--radius);
+      border: 1px dashed rgba(255,255,255,.18);
+      background:
+        radial-gradient(600px 300px at 50% 0%, rgba(255,79,216,.14), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      color: rgba(255,255,255,.75);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .imgph img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .imgph i{ color: var(--pink); }
+    .mini{ font-size:.92rem; color: var(--dim); line-height:1.7; }
+
+    .team{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+    }
+    .member{
+      display:flex; gap:16px; align-items:flex-start;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .member::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(450px 220px at 10% 0%, rgba(255,79,216,.22), transparent 55%);
+      opacity:.6;
+      pointer-events:none;
+    }
+    .member > *{ position:relative; z-index:1; }
+    .avatar{
+      width:54px; height:54px; border-radius:16px;
+      background: rgba(255,79,216,.12);
+      border: 1px solid rgba(255,79,216,.22);
+      display:flex; align-items:center; justify-content:center;
+      flex: 0 0 auto;
+      box-shadow: 0 0 30px rgba(255,79,216,.08);
+      overflow:hidden;
+    }
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      border-radius:16px;
+    }
+    .avatar i{ color: var(--pink); }
+    .role{
+      display:inline-block;
+      font-size:.82rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.85);
+      margin: 4px 0 8px;
+    }
+    .member h3{ margin:0; font-size:1.25rem; }
+    .member p{ margin-top: 8px; color: var(--dim); line-height:1.7; }
+
+    .sources{
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-top:18px;
+    }
+    .sources ul{ margin-top: 10px; padding-left: 18px; color: var(--dim); line-height:1.7; }
+    .sources li{ margin: 8px 0; }
+
+    .reveal{ opacity:0; transform: translateY(26px); transition: .8s ease; }
+    .reveal.active{ opacity:1; transform: translateY(0); }
+
+    footer{
+      padding: 40px 0 60px;
+      color: rgba(255,255,255,.62);
+      text-align:center;
+      border-top: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.18);
+    }
+
+    @media (max-width: 980px){
+      .grid-3{ grid-template-columns: 1fr; }
+      .grid-2{ grid-template-columns: 1fr; }
+      .stats{ grid-template-columns: 1fr; }
+      .proto{ grid-template-columns: 1fr; }
+      .team{ grid-template-columns: 1fr; }
+      #cellCanvas{ display:none; }
+    }
+    @media (max-width: 820px){
+      .nav-links{ display:none; }
+      .hamburger{ display:flex; }
+      header#hero{ padding-top: 86px; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="container nav-wrap">
+      <a class="logo" href="#hero">
+        <img class="logo-mark" src="Logo.png" alt="Sodspira logo" />
+        SODSPIRA<span>.</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#innovation">Solution</a></li>
+        <li><a href="#prototype">Prototype</a></li>
+        <li><a href="#impact">Impact</a></li>
+        <li><a href="#team">Team</a></li>
+      </ul>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="container mobile-panel" id="mobilePanel">
+      <a href="#problem">Problem</a>
+      <a href="#innovation">Solution</a>
+      <a href="#prototype">Prototype</a>
+      <a href="#impact">Impact</a>
+      <a href="#team">Team</a>
+    </div>
+  </nav>
+
+  <header id="hero">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-blob blob-a" id="blobA"></div>
+    <div class="hero-blob blob-b" id="blobB"></div>
+
+    <canvas id="cellCanvas" aria-hidden="true"></canvas>
+
+    <div class="container hero-content" id="heroContent">
+      <span class="pill"><span class="tag-dot"></span>Conrad Challenge • Health &amp; Wellness</span>
+
+      <h1 class="hero-title">Elevating Lung Health<br>via SOD Liposomes</h1>
+      <p class="hero-sub">
+        Sodspira is a dry-powder inhalation therapy designed to reduce oxidative stress in the lungs by delivering
+        Superoxide Dismutase (SOD) inside protective liposomes—aiming to prevent damage, not just manage symptoms.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn-solid" href="#innovation"><i class="fa-solid fa-arrow-right"></i> Explore Innovation</a>
+        <a class="btn" href="#team"><i class="fa-regular fa-user"></i> Meet the Team</a>
+      </div>
+
+      <div class="quick-badges">
+        <span class="badge"><i class="fa-solid fa-wind"></i> Dry powder inhaler</span>
+        <span class="badge"><i class="fa-solid fa-shield-heart"></i> Targeted antioxidant therapy</span>
+        <span class="badge"><i class="fa-solid fa-globe"></i> Built for global access</span>
+      </div>
+    </div>
+  </header>
+
+  <section id="stats">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>By the Numbers</h2>
+        <p>Why oxidative-stress lung disease is a massive global problem—and why prevention matters.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat reveal">
+          <div class="stat-num counter" data-target="480" data-suffix="M">0</div>
+          <p>Estimated people living with COPD (global prevalence estimate)</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-num counter" data-target="3.72" data-suffix="M">0</div>
+          <p>Deaths from COPD in 2021 (global burden estimate)</p>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-num counter" data-target="79.78" data-suffix="M">0</div>
+          <p>Healthy years lost (DALYs) in 2021</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>The Problem</h2>
+        <p>Oxidative stress drives inflammation and structural damage—especially in chronic respiratory disease.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-lungs"></i></div>
+          <h3>Oxidative Distress</h3>
+          <p>Pollution, smoke, and chronic inflammation can overload lung tissue with reactive oxygen species (ROS),
+             damaging cells and worsening airway function over time.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-ban"></i></div>
+          <h3>Current Limitations</h3>
+          <p>Many therapies focus on symptom control. Patients still face ongoing tissue damage and progressive decline.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <h3>The Gap</h3>
+          <p>There’s a need for a lung-targeted approach that addresses oxidative damage at the cellular level early—before
+             irreversible remodeling sets in.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="innovation">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>The Sodspira Solution</h2>
+        <p>Biomimetic delivery + enzymatic defense to neutralize ROS where damage starts.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-flask"></i></div>
+          <h3>SOD Enzyme</h3>
+          <p>Superoxide Dismutase (SOD) helps convert superoxide radicals into less reactive species, supporting the body’s
+             own antioxidant defenses.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-capsules"></i></div>
+          <h3>Liposomal Vector</h3>
+          <p>Liposomes protect sensitive cargo and mimic cell membranes. This can improve stability and help deliver the
+             enzyme closer to the target tissue.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-crosshairs"></i></div>
+          <h3>Localized Delivery</h3>
+          <p>A dry-powder inhaler can deliver therapy directly to the lungs, reducing systemic exposure and supporting
+             scalable, patient-friendly use.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prototype">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Prototype</h2>
+        <p>What we’re building and how it will be tested.</p>
+      </div>
+
+      <div class="proto">
+        <div class="imgph reveal" title="Prototype diagram or photo">
+          <img src="Prototype.png" alt="Sodspira prototype" loading="lazy" />
+        </div>
+
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          <h3>Prototype Plan</h3>
+          <p class="mini">
+            Our prototype focuses on: (1) stable SOD-liposome formulation suitable for dry powder delivery, (2) an inhaler-ready
+            powder blend for consistent dosing, and (3) a validation plan measuring oxidative-stress biomarkers and tissue response.
+            <br><br>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="impact">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Intended Impact</h2>
+        <p>Designed for accessibility, prevention, and scalable use in high-risk settings.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-wind"></i></div>
+          <h3>Accessible Delivery</h3>
+          <p>Dry-powder formats can reduce cold-chain requirements and simplify distribution, helping more patients access therapy.</p>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon"><i class="fa-solid fa-shield-heart"></i></div>
+          <h3>Preventative Care</h3>
+          <p>By reducing oxidative stress early, Sodspira aims to slow or prevent structural damage, supporting better long-term outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Our Team</h2>
+        <p>Two-person team with complementary strengths across research experience and design. We are both Juniors from Stuyvesant High school, and we have witnessed firsthand the effects of lung diseases such as asthma and COPD. We want to make a difference, so we made Sodspira.</p>
+      </div>
+
+      <div class="team">
+        <div class="member reveal">
+          <div class="avatar"><img src="Daniel2.png" alt="Daniel Li" loading="lazy" /></div>
+          <div>
+            <span class="role">Research & Business</span>
+            <h3>Daniel Li</h3>
+            <p>Leads the scientific rationale, entrepreneurship aspects, website design and video editing</p>
+          </div>
+        </div>
+
+        <div class="member reveal">
+          <div class="avatar"><img src="Lisa.jpg" alt="Lisa Burdi" loading="lazy" /></div>
+          <div>
+            <span class="role">Research & Design</span>
+            <h3>Lisa Burdi</h3>
+            <p>Leads prototype visuals, scientific rationale, inhaler-delivery concepting, and presentation/website design.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sources reveal">
+        <h3 style="font-family:Montserrat; font-size:1.1rem;">Sources </h3>
+        <ul>
+          <li>COPD prevalence estimate (~480M): global prevalence analysis (JAMA Network Open).</li>
+          <li>Deaths + DALYs (2021): Global Burden of Disease (GBD 2021) reporting (3.72M deaths; 79.78M DALYs).</li>
+          <li>DALY definition: WHO overview (1 DALY = 1 year of healthy life lost).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Sodspira Project. Created for the Conrad Challenge.</p>
+     <p style="margin-top:10px; opacity:.7;">
+  <a href="PASTE_VIDEO_LINK_HERE" target="_blank" rel="noopener noreferrer" style="text-decoration:underline;">
+    Link to video
+  </a>
+</p>
+
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobilePanel = document.getElementById('mobilePanel');
+    let menuOpen = false;
+
+    hamburger?.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobilePanel.style.display = menuOpen ? 'block' : 'none';
+    });
+
+    mobilePanel?.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        menuOpen = false;
+        mobilePanel.style.display = 'none';
+      });
+    });
+
+    const revealEls = document.querySelectorAll('.reveal');
+
+    function animateCounter(el){
+      const target = parseFloat(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1800;
+      const start = performance.now();
+
+      function tick(now){
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = target * eased;
+
+        const decimals = (String(target).includes('.')) ? 2 : 0;
+        el.textContent = val.toFixed(decimals) + suffix;
+
+        if(t < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toFixed(decimals) + suffix;
+      }
+      requestAnimationFrame(tick);
+    }
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('active');
+
+          const c = entry.target.querySelector?.('.counter');
+          if(c && !c.dataset.done){
+            c.dataset.done = '1';
+            animateCounter(c);
+          }
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealEls.forEach(el => io.observe(el));
+
+    const hero = document.getElementById('hero');
+    const blobA = document.getElementById('blobA');
+    const blobB = document.getElementById('blobB');
+    const particles = document.getElementById('particles');
+    const heroContent = document.getElementById('heroContent');
+
+    function setVars(el, x, y){
+      if(!el) return;
+      el.style.setProperty('--px', x + 'px');
+      el.style.setProperty('--py', y + 'px');
+    }
+
+    hero?.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+
+      const dx = (e.clientX - cx);
+      const dy = (e.clientY - cy);
+
+      setVars(blobA, dx * -0.04, dy * -0.04);
+      setVars(blobB, dx *  0.05, dy *  0.05);
+      setVars(particles, dx * 0.02, dy * 0.02);
+
+      const tiltX = (dx / rect.width) * 8;
+      const tiltY = (dy / rect.height) * 6;
+      heroContent?.style.setProperty('--tiltX', tiltX.toFixed(2));
+      heroContent?.style.setProperty('--tiltY', (-tiltY).toFixed(2));
+    });
+
+    hero?.addEventListener('mouseleave', () => {
+      setVars(blobA, 0, 0);
+      setVars(blobB, 0, 0);
+      setVars(particles, 0, 0);
+      heroContent?.style.setProperty('--tiltX', '0');
+      heroContent?.style.setProperty('--tiltY', '0');
+    });
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+    import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+    import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
+    import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+    import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+
+    THREE.ColorManagement.enabled = true;
+
+    const canvas = document.getElementById("cellCanvas");
+    if(!canvas) throw new Error("Missing canvas");
+
+    const scene = new THREE.Scene();
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: "high-performance"
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.setClearColor(0x000000, 0);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
+    const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 2000);
+    camera.position.set(0, 0, 6);
+    camera.lookAt(0, 0, 0);
+
+    const key = new THREE.DirectionalLight(0xffffff, 3.2);
+    key.position.set(2.4, 2.0, 3.2);
+    scene.add(key);
+
+    const fill = new THREE.DirectionalLight(0x9ff7ff, 0.8);
+    fill.position.set(-2.4, -1.0, 2.0);
+    scene.add(fill);
+
+    const rim = new THREE.DirectionalLight(0xff4fd8, 1.0);
+    rim.position.set(0.2, 2.6, -2.2);
+    scene.add(rim);
+
+    const amb = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(amb);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+
+    const hdrUrl = "https://unpkg.com/three@0.160.0/examples/textures/equirectangular/venice_sunset_1k.hdr";
+    new RGBELoader().load(hdrUrl, (hdr) => {
+      hdr.mapping = THREE.EquirectangularReflectionMapping;
+      const env = pmrem.fromEquirectangular(hdr).texture;
+      scene.environment = env;
+      hdr.dispose();
+    });
+
+    const cellGroup = new THREE.Group();
+    scene.add(cellGroup);
+
+    const baseRadius = 1.55;
+
+    const glowGeo = new THREE.SphereGeometry(baseRadius * 1.07, 96, 96);
+    const glowMat = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        uColor: { value: new THREE.Color(0xff4fd8) },
+        uPower: { value: 2.7 },
+        uIntensity: { value: 0.33 }
+      },
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec3 vWorldPos;
+        void main(){
+          vNormal = normalize(normalMatrix * normal);
+          vec4 wp = modelMatrix * vec4(position, 1.0);
+          vWorldPos = wp.xyz;
+          gl_Position = projectionMatrix * viewMatrix * wp;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uColor;
+        uniform float uPower;
+        uniform float uIntensity;
+        varying vec3 vNormal;
+        varying vec3 vWorldPos;
+        void main(){
+          vec3 viewDir = normalize(cameraPosition - vWorldPos);
+          float fres = pow(1.0 - max(dot(vNormal, viewDir), 0.0), uPower);
+          float a = fres * uIntensity;
+          gl_FragColor = vec4(uColor, a);
+        }
+      `
+    });
+
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    cellGroup.add(glow);
+
+    function tuneMaterial(mat, mesh){
+      if(!mat) return;
+
+      if(mesh && mesh.geometry && mesh.geometry.attributes && mesh.geometry.attributes.color){
+        mat.vertexColors = true;
+      }
+
+      if(mat.map) mat.map.colorSpace = THREE.SRGBColorSpace;
+      if(mat.emissiveMap) mat.emissiveMap.colorSpace = THREE.SRGBColorSpace;
+
+      if(typeof mat.envMapIntensity === "number") mat.envMapIntensity = 1.1;
+
+      if(typeof mat.emissiveIntensity === "number") mat.emissiveIntensity = Math.min(mat.emissiveIntensity, 1.25);
+
+      if(typeof mat.metalness === "number") mat.metalness = Math.min(mat.metalness, 0.35);
+      if(typeof mat.roughness === "number") mat.roughness = Math.max(0.15, Math.min(mat.roughness, 0.85));
+
+      mat.needsUpdate = true;
+    }
+
+    const loader = new GLTFLoader();
+
+    const draco = new DRACOLoader();
+    draco.setDecoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/");
+    loader.setDRACOLoader(draco);
+
+    loader.setMeshoptDecoder(MeshoptDecoder);
+
+    const ktx2 = new KTX2Loader();
+    ktx2.setTranscoderPath("https://unpkg.com/three@0.160.0/examples/jsm/libs/basis/");
+    ktx2.detectSupport(renderer);
+    loader.setKTX2Loader(ktx2);
+
+    const candidates = ["cell.glb", "model.glb", "scene.glb"];
+
+    async function firstExistingModel(){
+      for(const name of candidates){
+        const url = new URL("./" + name, window.location.href).href;
+        try{
+          const r = await fetch(url, { method: "HEAD" });
+          if(r.ok) return url;
+        } catch(e){}
+      }
+      return new URL("./" + candidates[0], window.location.href).href;
+    }
+
+    let modelRoot = null;
+    let fitRadius = null;
+
+    function fitCameraToRadius(radius){
+      const fov = THREE.MathUtils.degToRad(camera.fov);
+      const fitHeight = radius / Math.tan(fov * 0.5);
+      const fitWidth = fitHeight / camera.aspect;
+     const dist = Math.max(fitHeight, fitWidth) * 0.80;
+
+      camera.position.set(0, 0, dist);
+      camera.near = Math.max(0.01, dist / 100);
+      camera.far = dist * 100;
+      camera.updateProjectionMatrix();
+      camera.lookAt(0, 0, 0);
+    }
+
+    const modelUrl = await firstExistingModel();
+    loader.load(modelUrl, (gltf) => {
+      modelRoot = gltf.scene;
+      cellGroup.add(modelRoot);
+
+      modelRoot.traverse(o => {
+        if(o.isMesh){
+          o.castShadow = false;
+          o.receiveShadow = false;
+          if(Array.isArray(o.material)) o.material.forEach(m => tuneMaterial(m, o));
+          else tuneMaterial(o.material, o);
+        }
+      });
+
+      const box = new THREE.Box3().setFromObject(modelRoot);
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      modelRoot.position.sub(center);
+
+      const box2 = new THREE.Box3().setFromObject(modelRoot);
+      const sphere = new THREE.Sphere();
+      box2.getBoundingSphere(sphere);
+
+      const maxDim = sphere.radius * 2;
+      const target = baseRadius * 5.0;
+      const s = maxDim > 0 ? (target / maxDim) : 1;
+      modelRoot.scale.setScalar(s);
+
+      const box3 = new THREE.Box3().setFromObject(modelRoot);
+      const sphere2 = new THREE.Sphere();
+      box3.getBoundingSphere(sphere2);
+
+      fitRadius = sphere2.radius;
+      fitCameraToRadius(fitRadius);
+    }, undefined, (err) => {
+      console.error("GLB load failed:", err);
+    });
+
+    function resize(){
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      if(fitRadius) fitCameraToRadius(fitRadius);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    let mx = 0, my = 0;
+    window.addEventListener("mousemove", (e) => {
+      mx = (e.clientX / window.innerWidth) * 2 - 1;
+      my = (e.clientY / window.innerHeight) * 2 - 1;
+    });
+
+    const clock = new THREE.Clock();
+    function tick(){
+      const t = clock.getElapsedTime();
+
+      const breathe = 1 + Math.sin(t * 1.05) * 0.012;
+      cellGroup.scale.setScalar(breathe);
+
+      cellGroup.rotation.y = t * 0.34 + mx * 0.18;
+      cellGroup.rotation.x = t * 0.10 + (-my) * 0.14;
+
+      cellGroup.position.set(0, 0, 0);
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    tick();
+  </script>
+</body>
+</html>
+
